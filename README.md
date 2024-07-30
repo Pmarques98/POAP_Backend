@@ -14,7 +14,7 @@ Antes de começar, certifique-se de ter o seguinte software instalado:
 Clone o repositório do projeto usando Git:
 
 ```bash
-git clone https://github.com/Pmarques98/SIGS_BR.git
+git clone https://github.com/Pmarques98/SIGS_BR_Backend.git
 cd nome-do-projeto
 ```
 
