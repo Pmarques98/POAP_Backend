@@ -9,7 +9,7 @@ router.get('/teste', (req: Request, res: Response) => {
 })
 
 //rotas users
-router.post('/users', new CreateUserController().handle)
-router.post('/session', new AuthUserController().handle)
+router.post('/cadastro', new CreateUserController().handle)
+router.post('/login', new AuthUserController().handle)
 
 export {router};
