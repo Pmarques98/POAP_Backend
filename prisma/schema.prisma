@@ -16,18 +16,70 @@ datasource db {
 //criar uma migration: yarn prisma migrate dev
 
 //criar tabela no BD
+// Tabela: usuarios
 model User {
-  id String @id @default(uuid())  //primary key
-  name String
-  email String
-  password String
-  create_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
+  id              String   @id @default(uuid())          // Identificador único do usuário
+  name            String   @db.VarChar(100)              // Nome completo do usuário
+  email           String   @db.VarChar(100)              // E-mail usado para login
+  password           String   @db.VarChar(255)              // Hash da senha do usuário
+  gravity       Gravity                             // Nível de gravidade do usuário em questão
+  create_at       DateTime @default(now())               // Data e hora de criação do registro
+  updated_at   DateTime @updatedAt                    // Data e hora da última atualização do registro
 
-  @@map("users")   //mapear como essa tabela seja criada no BD
-  //appointment Appointment[]
+  @@map("users") // Mapeia a tabela como "usuarios"
 }
 
+// Tabela: psicologos
+model Psychologist {
+  id              String   @id @default(uuid())          // Identificador único do usuário
+  name            String   @db.VarChar(100)              // Nome completo do psicólogo
+  status          Status                                // Status do psicólogo (disponível ou ocupado)
+  email           String   @db.VarChar(100)      // E-mail usado para login
+  password           String   @db.VarChar(255)              // Hash da senha do psicólogo
+  cellphone_number        String   @db.VarChar(15)               // Telefone do responsável
+  create_at       DateTime @default(now())               // Data e hora de criação do registro
+  updated_at    DateTime @updatedAt                    // Data e hora da última atualização do registro
+
+  @@map("psychologist") // Mapeia a tabela como "psicologos"
+}
+
+// Tabela: consultas
+model Consultation {
+  id              String   @id @default(uuid())          // Identificador único do usuário
+  description       String   @db.VarChar(512)              // Descrição resumida do problema enfrentado
+  user_email      String   @db.VarChar(100)              // E-mail do usuário que solicitou a consulta
+  psychologist_email String   @db.VarChar(100)              // E-mail do psicólogo que vai realizar ou já realizou a consulta
+  data_consultation       DateTime                              // Data e hora da consulta
+  report       String   @db.VarChar(3000)             // Relatório detalhado da consulta
+  gravity       Gravity                             // Gravidade atribuída na consulta
+  create_at       DateTime @default(now())               // Data e hora de criação do registro
+
+  @@map("consultation") // Mapeia a tabela como "consultas"
+}
+
+// Tabela: recomendacoes
+model Report {
+  id              String   @id @default(uuid())          // Identificador único do usuário
+  user_email   String   @db.VarChar(100)              // E-mail do paciente em questão
+  psychologist_email String   @db.VarChar(100)              // E-mail do psicólogo que realizou a recomendação
+  data       DateTime                              // Data e hora da recomendação
+  report    String   @db.VarChar(3000)             // Recomendações por escrita sobre determinado paciente
+  gravity       Gravity                             // Nível de gravidade do usuário em questão
+
+  @@map("report") // Mapeia a tabela como "recomendacoes"
+}
+
+enum Gravity {
+  leve
+  moderado
+  grave
+  emergencial
+}
+
+enum Status {
+  disponivel
+  ocupado
+}
 
 //model Appointment {
 //  id String @id @default(uuid())
