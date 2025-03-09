@@ -10,6 +10,10 @@ interface UserRequest {
 
 class CreateUserService {
     async execute({ name, email, password, gravity }: UserRequest) {
+         // Verificar se todos os campos obrigatórios foram enviados
+         if (!name || !email || !password || !gravity) {
+            throw new Error("Todos os campos são obrigatórios");
+        }
 
         // Verificar se ele enviou um email
         if (!email) {
@@ -17,13 +21,19 @@ class CreateUserService {
         }
 
         // Verificar se esse email já está cadastrado na plataforma
-        const userAlreadyExist = await prismaClient.user.findFirst({
+        const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {
                 email: email
             }
         });
 
-        if (userAlreadyExist) {
+        const userAlreadyExistInUser = await prismaClient.user.findFirst({
+            where: {
+                email: email
+            }
+        });
+
+        if (userAlreadyExistInPsychologists || userAlreadyExistInUser) {
             throw new Error("Usuario já está cadastrado");
         }
 
