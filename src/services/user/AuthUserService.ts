@@ -8,6 +8,8 @@ interface AuthRequest {
 }
 
 class AuthUserService {
+    private loggedInEmail: string | null = null;
+
     async execute({ email, password }: AuthRequest) {
         // Verificar se o email existe na tabela de usuários
         let isUser: boolean = true;
@@ -48,7 +50,9 @@ class AuthUserService {
             }
         }
 
-        // Se o login for correto, gera o token do usuário
+        // Se o login for correto, salva o email e gera o token do usuário
+        this.loggedInEmail = email;
+
         if(isUser){
             const token = sign(
                 {
@@ -66,7 +70,8 @@ class AuthUserService {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                token: token
+                token: token,
+                isUser: true
             };
         }
         else{
@@ -88,9 +93,14 @@ class AuthUserService {
                 email: psychologist.email,
                 cellphone_number: psychologist.cellphone_number,
                 status: psychologist.status,
-                token: token
+                token: token,
+                isUser: false
             };
         }
+    }
+
+    getLoggedInEmail(): string | null {
+        return this.loggedInEmail;
     }
 }
 

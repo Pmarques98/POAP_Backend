@@ -48,10 +48,11 @@ model Consultation {
   id              String   @id @default(uuid())          // Identificador único do usuário
   description       String   @db.VarChar(512)              // Descrição resumida do problema enfrentado
   user_email      String   @db.VarChar(100)              // E-mail do usuário que solicitou a consulta
-  psychologist_email String   @db.VarChar(100)              // E-mail do psicólogo que vai realizar ou já realizou a consulta
+  psychologist_email String?   @db.VarChar(100)              // E-mail do psicólogo que vai realizar ou já realizou a consulta
   data_consultation       DateTime                              // Data e hora da consulta
-  report       String   @db.VarChar(3000)             // Relatório detalhado da consulta
-  gravity       Gravity                             // Gravidade atribuída na consulta
+  link_meets      String?   @db.VarChar(100)           // Link da reunião no Google Meet
+  report       String?   @db.VarChar(3000)             // Relatório detalhado da consulta
+  gravity       Gravity                                // Gravidade atribuída na consulta
   create_at       DateTime @default(now())               // Data e hora de criação do registro
 
   @@map("consultation") // Mapeia a tabela como "consultas"
@@ -68,6 +69,7 @@ model Report {
 
   @@map("report") // Mapeia a tabela como "recomendacoes"
 }
+
 
 enum Gravity {
   leve
