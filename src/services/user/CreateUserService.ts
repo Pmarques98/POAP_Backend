@@ -5,13 +5,13 @@ interface UserRequest {
     name: string;
     email: string;
     password: string;
-    gravity: 'leve' | 'moderado' | 'grave' | 'emergencial';
+    cpf: string;
 }
 
 class CreateUserService {
-    async execute({ name, email, password, gravity }: UserRequest) {
+    async execute({ name, email, password, cpf }: UserRequest) {
          // Verificar se todos os campos obrigatórios foram enviados
-         if (!name || !email || !password || !gravity) {
+         if (!name || !email || !password || !cpf) {
             throw new Error("Todos os campos são obrigatórios");
         }
 
@@ -23,13 +23,13 @@ class CreateUserService {
         // Verificar se esse email já está cadastrado na plataforma
         const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {
-                email: email
+                cpf: cpf
             }
         });
 
         const userAlreadyExistInUser = await prismaClient.user.findFirst({
             where: {
-                email: email
+                cpf: cpf
             }
         });
 
@@ -44,13 +44,13 @@ class CreateUserService {
                 name: name,
                 email: email,
                 password: passwordHash,
-                gravity: gravity
+                cpf: cpf
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                gravity: true
+                cpf: true
             }
         });
 

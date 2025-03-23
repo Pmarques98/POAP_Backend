@@ -3,12 +3,13 @@ import { CreateConsultationService } from '../../services/consultation/CreateCon
 
 class CreateConsultationController {
     async handle(req: Request, res: Response) {
-        const { description, user_email, data_consultation  } = req.body;
+        const { description, cpf_user, cpf_paciente, data_consultation  } = req.body;
 
         const createConsultationService = new CreateConsultationService();
         const consultation = await createConsultationService.execute({
             description,
-            user_email,
+            cpf_user,
+            cpf_paciente,
             data_consultation
         });
 

@@ -4,15 +4,16 @@ import { hash } from 'bcryptjs';
 interface UserRequest {
     name: string;
     email: string;
+    cpf: string;
     password: string;
     cellphone_number: string;
     status: 'disponivel';
 }
 
 class CreateUserServicePsychologist {
-    async execute({ name, email, password, cellphone_number }: UserRequest) {
+    async execute({ name, email, cpf, password, cellphone_number }: UserRequest) {
         // Verificar se todos os campos obrigatórios foram enviados
-        if (!name || !email || !password || !cellphone_number) {
+        if (!name || !email || !password || !cellphone_number || !cpf) {
             throw new Error("Todos os campos são obrigatórios");
         }
 
@@ -30,13 +31,13 @@ class CreateUserServicePsychologist {
         // Verificar se esse email já está cadastrado na plataforma
         const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {
-                email: email
+                cpf: cpf
             }
         });
 
         const userAlreadyExistInUser = await prismaClient.user.findFirst({
             where: {
-                email: email
+                cpf: cpf
             }
         });
 
@@ -51,6 +52,7 @@ class CreateUserServicePsychologist {
                 data: {
                     name: name,
                     email: email,
+                    cpf: cpf,
                     status: 'disponivel',
                     password: passwordHash,
                     cellphone_number: cellphone_number
@@ -60,7 +62,8 @@ class CreateUserServicePsychologist {
                     name: true,
                     status: true,
                     email: true,
-                    cellphone_number: true
+                    cellphone_number: true,
+                    cpf: true
                 }
             });
 
