@@ -1,4 +1,5 @@
 import prismaClient from '../../prisma';
+import { GoogleMeetService } from '../meet/GoogleMeetService';
 
 interface ConsultationRequest {
     description: string;
@@ -45,6 +46,17 @@ class CreateConsultationService {
             throw new Error("O paciente já tem uma consulta marcada para este dia.");
         }
 
+        // Criar o evento no Google Calendar com link do Google Meet
+        const googleMeetService = new GoogleMeetService();
+        const meetLink = await googleMeetService.createEvent(
+            'Consulta Médica',
+            description,
+            consultationDate.toISOString(),
+            new Date(consultationDate.getTime() + 60 * 60 * 1000).toISOString() // 1 hora de duração
+        );
+
+        console.log("Google Meet Link:", meetLink);
+
         // Criar a consulta no banco de dados
         const consultation = await prismaClient.consultation.create({
             data: {
@@ -52,6 +64,7 @@ class CreateConsultationService {
                 cpf_user,
                 cpf_paciente,
                 data_consultation: consultationDate,
+                link_meets: meetLink // Adicionar o link da reunião ao banco de dados
             }
         });
 

@@ -20,7 +20,7 @@ class CreateUserService {
             throw new Error("Email incorreto");
         }
 
-        // Verificar se esse email já está cadastrado na plataforma
+        // Verificar se esse cpf já está cadastrado na plataforma
         const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {
                 cpf: cpf

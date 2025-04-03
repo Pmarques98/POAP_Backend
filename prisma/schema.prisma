@@ -53,7 +53,6 @@ model Consultation {
   cpf_psychologist    String?  @db.VarChar(100)              // CPF do psicólogo que vai realizar ou já realizou a consulta
   data_consultation   DateTime                              // Data e hora da consulta
   link_meets          String?  @db.VarChar(100)              // Link da reunião no Google Meet
-  report              String?  @db.VarChar(3000)             // Relatório detalhado da consulta
   create_at           DateTime @default(now())               // Data e hora de criação do registro
 
   @@map("consultation") // Mapeia a tabela como "consultas"
@@ -71,6 +70,17 @@ model Report {
   report              String   @db.VarChar(3000)             // Recomendações por escrita sobre determinado paciente
 
   @@map("report") // Mapeia a tabela como "recomendacoes"
+}
+
+// Tabela: crianças
+model Children {
+  id                  Int      @id @default(autoincrement()) // Identificador único da criança
+  cpf_crianca         String   @db.VarChar(11)              // CPF da criança
+  cpf_responsavel     String   @db.VarChar(11)              // CPF do responsável
+  telefone_responsavel String  @db.VarChar(11)              // Telefone do responsável
+  nome_crianca        String   @db.VarChar(100)             // Nome da criança
+
+  @@map("children") // Mapeia a tabela como "criancas"
 }
 
 enum Status {
