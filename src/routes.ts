@@ -4,6 +4,7 @@ import {CreateUserControllerPsychologist} from './controllers/psychologist/Creat
 import {AuthUserController} from './controllers/user/AuthUserController'
 import {CreateConsultationController} from './controllers/consultation/CreateConsultationController'
 import { CreateChildController } from "./controllers/children/CreateChildController";
+import { DashboardUserController } from "./controllers/dashboards/DashboardUserController";
 
 
 const router = Router();
@@ -18,6 +19,7 @@ router.post('/cadastro/psicologo', new CreateUserControllerPsychologist().handle
 router.post('/login', new AuthUserController().handle)
 router.post('/consulta', new CreateConsultationController().handle)
 router.post('/cadastro/crianca', new CreateChildController().handle)
+router.post('/dashboard/usuario', new DashboardUserController().handle)
 
 
 

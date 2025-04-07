@@ -52,7 +52,8 @@ class CreateConsultationService {
             'Consulta Médica',
             description,
             consultationDate.toISOString(),
-            new Date(consultationDate.getTime() + 60 * 60 * 1000).toISOString() // 1 hora de duração
+            new Date(consultationDate.getTime() + 60 * 60 * 1000).toISOString(), // 1 hora de duração
+            'patrickmarques98@gmail.com' // Adicionar o e-mail do participante
         );
 
         console.log("Google Meet Link:", meetLink);

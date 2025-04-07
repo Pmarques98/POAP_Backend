@@ -4,56 +4,68 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 class GoogleMeetService {
-    private oAuth2Client;
+  private oAuth2Client;
 
-    constructor() {
-        this.oAuth2Client = new google.auth.OAuth2(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            process.env.REDIRECT_URL
-        );
+  constructor() {
+    this.oAuth2Client = new google.auth.OAuth2(
+      process.env.CLIENT_ID_NEW,
+      process.env.CLIENT_SECRET_NEW,
+      process.env.REDIRECT_URL
+    );
 
-        this.oAuth2Client.setCredentials({
-            refresh_token: process.env.REFRESH_TOKEN
-        });
-    }
+    console.info('Client id:', process.env.CLIENT_ID_NEW);
 
-    async createEvent(summary: string, description: string, startDateTime: string, endDateTime: string, timeZone: string = 'America/Sao_Paulo') {
-        const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
+    this.oAuth2Client.setCredentials({
+      refresh_token: process.env.REFRESH_TOKEN_NEW,
+    });
+  }
 
-        const event = {
-            summary: summary,
-            description: description,
-            start: {
-                dateTime: startDateTime,
-                timeZone: timeZone,
-            },
-            end: {
-                dateTime: endDateTime,
-                timeZone: timeZone,
-            },
-            conferenceData: {
-                createRequest: {
-                    requestId: 'some-random-string', // ID único para a solicitação
-                    conferenceSolutionKey: {
-                        type: 'hangoutsMeet'
-                    }
-                }
-            },
-            attendees: [
-                { email: 'public@example.com' } // Adicione um email fictício para tornar o evento público
-            ],
-            visibility: 'public' // Torne o evento público
-        };
+  async createEvent(
+    summary: string,
+    description: string,
+    startDateTime: string,
+    endDateTime: string,
+    participantEmail: string, // E-mail do participante que terá acesso direto
+    timeZone: string = 'America/Sao_Paulo'
+  ) {
+    const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
 
-        const createdEvent = await calendar.events.insert({
-            calendarId: 'primary',
-            requestBody: event,
-            conferenceDataVersion: 1
-        });
+    const event = {
+      summary,
+      description,
+      start: {
+        dateTime: startDateTime,
+        timeZone,
+      },
+      end: {
+        dateTime: endDateTime,
+        timeZone,
+      },
+      attendees: [
+        { email: participantEmail, responseStatus: 'accepted' }, // Adiciona o participante com status "aceito"
+     ],
+      conferenceData: {
+        createRequest: {
+          requestId: new Date().getTime().toString(), // ID único para o evento
+          conferenceSolutionKey: {
+            type: 'hangoutsMeet',
+          },
+        },
+      },
+      visibility: 'default',
+      guestsCanModify: true,
+      guestsCanInviteOthers: true,
+      guestsCanSeeOtherGuests: true,
+    };
 
-        return createdEvent.data.hangoutLink;
-    }
+    const createdEvent = await calendar.events.insert({
+      calendarId: 'primary',
+      requestBody: event,
+      conferenceDataVersion: 1,
+    });
+
+    return createdEvent.data.hangoutLink;
+  }
 }
 
 export { GoogleMeetService };
