@@ -1,32 +1,33 @@
 import prismaClient from "../../prisma";
 
-class DashboardUserService {
-    async execute(cpf_user: string) {
-        if (!cpf_user) {
-            throw new Error("O CPF é obrigatório.");
+class DashboardPsychologistService {
+    async execute(cpf_psychologist: string) {
+        if (!cpf_psychologist) {
+            throw new Error("O CPF do psicólogo é obrigatório.");
         }
 
-        // Consultar todas as consultas relacionadas ao CPF do usuário
-        const consultations = await prismaClient.consultation.findMany({
-            where: { cpf_user: cpf_user },
-        });
-
-        // Consultar todas as crianças relacionadas ao CPF do responsável
-        const children = await prismaClient.children.findMany({
-            where: { cpf_responsavel: cpf_user },
-        });
-
-        // Consultar todos os relatórios relacionados ao CPF do usuário
-        const reports = await prismaClient.report.findMany({
-            where: { cpf_user: cpf_user },
-        });
-
         const currentDate = new Date();
-        currentDate.setHours(currentDate.getHours() - 3); 
+        currentDate.setHours(currentDate.getHours() - 3); // Ajustar para o fuso horário correto
+
+        // Consultas que não têm o campo "cpf_psychologist" preenchido
+        const unassignedConsultations = await prismaClient.consultation.findMany({
+            where: {
+                cpf_psychologist: null,
+            },
+        });
+
+        // Consultas atribuídas ao psicólogo
+        const assignedConsultations = await prismaClient.consultation.findMany({
+            where: {
+                cpf_psychologist: cpf_psychologist,
+            },
+        });
+
+        console.log("Data atual ajustada:", currentDate);
 
         const upcomingConsultation = await prismaClient.consultation.findFirst({
             where: {
-                cpf_user: cpf_user,
+                cpf_psychologist: cpf_psychologist,
             },
         }).then((consultation) => {
             if (consultation) {
@@ -35,7 +36,7 @@ class DashboardUserService {
                 const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
                 console.log("timeDifference:", timeDifference);
 
-                if (timeDifference > 0 && timeDifference <= 10) {
+                if (timeDifference > 0 && timeDifference <= 15) {
                     console.log("Consulta próxima encontrada:", consultation);
                     return {
                         isUpcoming: true,
@@ -51,12 +52,11 @@ class DashboardUserService {
         });
 
         return {
-            consultations,
-            children,
-            reports,
+            unassignedConsultations,
+            assignedConsultations,
             upcomingConsultation,
         };
     }
 }
 
-export { DashboardUserService };
+export { DashboardPsychologistService };

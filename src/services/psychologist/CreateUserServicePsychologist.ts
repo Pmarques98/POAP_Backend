@@ -28,6 +28,11 @@ class CreateUserServicePsychologist {
             throw new Error("Número de celular incorreto. Deve estar no formato DD9XXXXXXXX");
         }
 
+        // Verificar se o CPF possui exatamente 11 dígitos
+        if (cpf.length !== 11) {
+            throw new Error("CPF deve conter exatamente 11 dígitos");
+        }
+
         // Verificar se esse email já está cadastrado na plataforma
         const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {

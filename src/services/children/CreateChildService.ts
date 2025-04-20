@@ -19,6 +19,11 @@ class CreateChildService {
             where: { cpf_crianca },
         });
 
+        // Verificar se o CPF possui exatamente 11 dígitos
+        if (cpf_crianca.length !== 11) {
+            throw new Error("CPF deve conter exatamente 11 dígitos");
+        }
+
         if (existingChild) {
             throw new Error("Já existe uma criança cadastrada com este CPF.");
         }

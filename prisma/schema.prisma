@@ -61,7 +61,7 @@ model Consultation {
 // Tabela: recomendacoes
 model Report {
   id                  Int      @id @default(autoincrement()) // Identificador único do usuário
-  nome_user           String   @db.VarChar(100)              // Nome do paciente em questão
+  name_child           String   @db.VarChar(100)              // Nome da criança atendida na consulta
   cpf_user            String   @db.VarChar(11)               // CPF do responsável da crianca que fez a consulta
   cpf_psychologist    String   @db.VarChar(11)               // CPF do psicólogo que realizou a recomendação
   nome_psychologist   String   @db.VarChar(100)              // Nome do psicólogo que realizou a recomendação
