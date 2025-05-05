@@ -5,10 +5,6 @@ class DashboardPsychologistController {
     async handle(req: Request, res: Response) {
         const { cpf_psychologist } = req.body;
 
-        if (!cpf_psychologist) {
-            return res.status(400).json({ error: "O CPF do psicólogo é obrigatório." });
-        }
-
         const dashboardPsychologistService = new DashboardPsychologistService();
 
         try {

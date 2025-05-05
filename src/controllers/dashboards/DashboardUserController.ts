@@ -3,16 +3,13 @@ import { DashboardUserService } from "../../services/dashboards/DashboardUserSer
 
 class DashboardUserController {
     async handle(req: Request, res: Response) {
-        const { cpf } = req.body; // Certifique-se de que o CPF está sendo extraído do corpo da requisição
+        const { cpf_user } = req.body;
 
-        if (!cpf) {
-            return res.status(400).json({ error: "O CPF é obrigatório." });
-        }
 
         const dashboardUserService = new DashboardUserService();
 
         try {
-            const dashboardData = await dashboardUserService.execute(cpf);
+            const dashboardData = await dashboardUserService.execute(cpf_user);
             return res.json(dashboardData);
         } catch (error) {
             return res.status(500).json({ error: error.message });

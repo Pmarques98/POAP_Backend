@@ -2,9 +2,7 @@ import prismaClient from "../../prisma";
 
 class DashboardUserService {
     async execute(cpf_user: string) {
-        if (!cpf_user) {
-            throw new Error("O CPF é obrigatório.");
-        }
+    
 
         // Consultar todas as consultas relacionadas ao CPF do usuário
         const consultations = await prismaClient.consultation.findMany({
@@ -24,25 +22,35 @@ class DashboardUserService {
         const currentDate = new Date();
         currentDate.setHours(currentDate.getHours() - 3); 
 
-        const upcomingConsultation = await prismaClient.consultation.findFirst({
+        const upcomingConsultation = await prismaClient.consultation.findMany({
             where: {
                 cpf_user: cpf_user,
+                cpf_psychologist: {
+                    not: null, // Garante que o cpf_psychologist está preenchido
+                },
             },
-        }).then((consultation) => {
-            if (consultation) {
+        }).then((consultations) => {
+            const currentDate = new Date();
+            currentDate.setHours(currentDate.getHours() - 3); // Ajusta o horário atual para UTC-3
+        
+            const upcoming = consultations.find((consultation) => {
                 const consultationDate = new Date(consultation.data_consultation);
-                console.log("consultationDate:", consultation.data_consultation);
-                const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
-                console.log("timeDifference:", timeDifference);
+                //console.log("consultationDate:", consultationDate);
+                //console.log("currentDate:", currentDate);
 
-                if (timeDifference > 0 && timeDifference <= 10) {
-                    console.log("Consulta próxima encontrada:", consultation);
-                    return {
-                        isUpcoming: true,
-                        link_meets: consultation.link_meets || null,
-                    };
-                }
+                const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
+        
+                return timeDifference > 0 && timeDifference <= 10; // Consulta dentro do intervalo de 10 minutos
+            });
+        
+            if (upcoming) {
+                console.log("Consulta próxima encontrada:", upcoming);
+                return {
+                    isUpcoming: true,
+                    link_meets: upcoming.link_meets || null,
+                };
             }
+        
             console.log("Nenhuma consulta próxima encontrada.");
             return {
                 isUpcoming: false,

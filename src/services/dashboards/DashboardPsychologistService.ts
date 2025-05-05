@@ -32,9 +32,9 @@ class DashboardPsychologistService {
         }).then((consultation) => {
             if (consultation) {
                 const consultationDate = new Date(consultation.data_consultation);
-                console.log("consultationDate:", consultation.data_consultation);
+                //console.log("consultationDate:", consultation.data_consultation);
                 const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
-                console.log("timeDifference:", timeDifference);
+                //console.log("timeDifference:", timeDifference);
 
                 if (timeDifference > 0 && timeDifference <= 15) {
                     console.log("Consulta próxima encontrada:", consultation);
