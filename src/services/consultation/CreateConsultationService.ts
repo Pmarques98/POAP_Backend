@@ -20,8 +20,8 @@ class CreateConsultationService {
         currentDate.setHours(currentDate.getHours() - 3); // Diminuir 3 horas do currentDate
         const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
 
-        if (timeDifference < 120) { // 120 minutos = 2 horas
-            throw new Error("A data da consulta deve ser marcada com pelo menos 2 horas de antecedência.");
+        if (timeDifference < 30) { // 30 minutos
+            throw new Error("A data da consulta deve ser marcada com pelo menos 30 minutos de antecedência.");
         }
 
         // Verificar se o cpf_paciente já tem uma consulta no mesmo dia
