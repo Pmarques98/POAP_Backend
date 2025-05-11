@@ -16,35 +16,29 @@ class DashboardPsychologistService {
             },
         });
 
-        // Consultas atribuídas ao psicólogo
-        const assignedConsultations = await prismaClient.consultation.findMany({
-            where: {
-                cpf_psychologist: cpf_psychologist,
-            },
-        });
 
         console.log("Data atual ajustada:", currentDate);
 
-        const upcomingConsultation = await prismaClient.consultation.findFirst({
+        const upcomingConsultation = await prismaClient.consultation.findMany({
             where: {
                 cpf_psychologist: cpf_psychologist,
             },
-        }).then((consultation) => {
-            if (consultation) {
+        }).then((consultations) => {
+            for (const consultation of consultations) {
                 const consultationDate = new Date(consultation.data_consultation);
-                //console.log("consultationDate:", consultation.data_consultation);
-                const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
-                //console.log("timeDifference:", timeDifference);
-
+                console.log("consultationDate:", consultation.data_consultation);
+                const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Difference in minutes
+                console.log("timeDifference:", timeDifference);
+        
                 if (timeDifference > 0 && timeDifference <= 15) {
-                    console.log("Consulta próxima encontrada:", consultation);
+                    console.log("Upcoming consultation found:", consultation);
                     return {
                         isUpcoming: true,
                         link_meets: consultation.link_meets || null,
                     };
                 }
             }
-            console.log("Nenhuma consulta próxima encontrada.");
+            console.log("No upcoming consultation found.");
             return {
                 isUpcoming: false,
                 link_meets: null,
@@ -53,7 +47,6 @@ class DashboardPsychologistService {
 
         return {
             unassignedConsultations,
-            assignedConsultations,
             upcomingConsultation,
         };
     }

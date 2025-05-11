@@ -9,7 +9,8 @@ import { DashboardPsychologistController } from "./controllers/dashboards/Dashbo
 import { AcceptConsultationController } from "./controllers/consultation/AcceptConsultationController";
 import { UpdateMeetsLinkController } from './controllers/consultation/UpdateMeetsLinkController';
 import { CreateReportController } from "./controllers/recomendations/CreateReportController";
-
+import { CreateConsultationAceptedController } from "./controllers/consultation/CreateConsultationAceptedController";
+import { GetReportsController } from "./controllers/recomendations/GetReportsController";
 
 const router = Router();
 
@@ -28,6 +29,9 @@ router.post('/dashboard/psicologo', new DashboardPsychologistController().handle
 router.post('/consulta/aceitar', new AcceptConsultationController().handle);
 router.post('/consulta/alterarMeets', new UpdateMeetsLinkController().handle);
 router.post('/reports', new CreateReportController().handle);
+router.post('/consulta/aceitas', new CreateConsultationAceptedController().handle);
+router.post('/reports/aceitos', new GetReportsController().handle);
+
 
 
 export {router};
