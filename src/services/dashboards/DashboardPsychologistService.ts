@@ -30,7 +30,7 @@ class DashboardPsychologistService {
                 const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Difference in minutes
                 console.log("timeDifference:", timeDifference);
         
-                if (timeDifference > 0 && timeDifference <= 15) {
+                if (timeDifference > 0 && timeDifference <= 20) {
                     console.log("Upcoming consultation found:", consultation);
                     return {
                         isUpcoming: true,

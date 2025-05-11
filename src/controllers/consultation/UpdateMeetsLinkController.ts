@@ -8,12 +8,15 @@ export class UpdateMeetsLinkController {
         if (!id || !link_meets) {
             return res.status(400).json({ error: "ID e link_meets são obrigatórios." });
         }
+        console.log("ID:", id);
+        console.log("link_meets:", link_meets);
 
         try {
             const consultation = await prisma.consultation.update({
                 where: { id: Number(id) },
                 data: { link_meets },
             });
+            console.log("Consulta atualizada:", consultation);
 
             return res.json({
                 message: "Link do Google Meets atualizado com sucesso.",
