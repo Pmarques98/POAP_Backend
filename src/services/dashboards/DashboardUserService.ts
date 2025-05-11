@@ -14,10 +14,6 @@ class DashboardUserService {
             where: { cpf_responsavel: cpf_user },
         });
 
-        // Consultar todos os relatórios relacionados ao CPF do usuário
-        const reports = await prismaClient.report.findMany({
-            where: { cpf_user: cpf_user },
-        });
 
         const currentDate = new Date();
         currentDate.setHours(currentDate.getHours() - 3); 
@@ -35,16 +31,26 @@ class DashboardUserService {
         
             const upcoming = consultations.find((consultation) => {
                 const consultationDate = new Date(consultation.data_consultation);
-                //console.log("consultationDate:", consultationDate);
-                //console.log("currentDate:", currentDate);
+                console.log("consultationDate:", consultationDate);
+                console.log("currentDate:", currentDate);
 
                 const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Diferença em minutos
-        
+                console.log("timeDifference:", timeDifference);
+
                 return timeDifference > 0 && timeDifference <= 10; // Consulta dentro do intervalo de 10 minutos
             });
         
             if (upcoming) {
                 console.log("Consulta próxima encontrada:", upcoming);
+        
+                // Verifica se o link_meets nao foi alterado pelo psicologo
+                if (upcoming.link_meets === "https://meet.google.com/new") {
+                    return {
+                        isUpcoming: false,
+                        link_meets: null,
+                    };
+                }
+        
                 return {
                     isUpcoming: true,
                     link_meets: upcoming.link_meets || null,
@@ -61,7 +67,6 @@ class DashboardUserService {
         return {
             consultations,
             children,
-            reports,
             upcomingConsultation,
         };
     }
