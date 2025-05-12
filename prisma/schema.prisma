@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,75 +7,67 @@ datasource db {
   url      = env("DATABASE_URL_NEW")
 }
 
-//criar uma migration: yarn prisma migrate dev
-
-//criar tabela no BD
-// Tabela: usuarios
 model User {
-  id              Int      @id @default(autoincrement()) // Identificador único do usuário
-  name            String   @db.VarChar(100)              // Nome completo do usuário
-  email           String   @db.VarChar(100)              // E-mail usado para login
-  cpf             String   @db.VarChar(11)               // CPF do usuário
-  password        String   @db.VarChar(255)              // Hash da senha do usuário
-  create_at       DateTime @default(now())               // Data e hora de criação do registro
-  updated_at      DateTime @updatedAt                    // Data e hora da última atualização do registro
+  name       String   @db.VarChar(100)
+  email      String   @db.VarChar(100)
+  password   String   @db.VarChar(255)
+  create_at  DateTime @default(now())
+  updated_at DateTime @updatedAt
+  cpf        String   @db.VarChar(11)
+  id         Int      @id @default(autoincrement())
 
-  @@map("users") // Mapeia a tabela como "usuarios"
+  @@map("users")
 }
 
-// Tabela: psicologos
 model Psychologist {
-  id              Int      @id @default(autoincrement()) // Identificador único do usuário
-  name            String   @db.VarChar(100)              // Nome completo do psicólogo
-  status          Status                                // Status do psicólogo (disponível ou ocupado)
-  email           String   @db.VarChar(100)              // E-mail usado para login
-  cpf             String   @db.VarChar(11)               // CPF do usuário
-  password        String   @db.VarChar(255)              // Hash da senha do psicólogo
-  cellphone_number String  @db.VarChar(15)               // Telefone do psicólogo
-  create_at       DateTime @default(now())               // Data e hora de criação do registro
-  updated_at      DateTime @updatedAt                    // Data e hora da última atualização do registro
+  name             String   @db.VarChar(100)
+  status           Status
+  email            String   @db.VarChar(100)
+  password         String   @db.VarChar(255)
+  cellphone_number String   @db.VarChar(15)
+  create_at        DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  cpf              String   @db.VarChar(11)
+  id               Int      @id @default(autoincrement())
 
-  @@map("psychologist") // Mapeia a tabela como "psicologos"
+  @@map("psychologist")
 }
 
-// Tabela: consultas
 model Consultation {
-  id                  Int      @id @default(autoincrement()) // Identificador único do usuário
-  description         String   @db.VarChar(512)              // Descrição resumida do problema enfrentado
-  cpf_user            String   @db.VarChar(11)               // CPF do responsável da crianca
-  cpf_paciente        String   @db.VarChar(11)               // CPF do crianca que irá aparecer na consulta online
-  cpf_psychologist    String?  @db.VarChar(100)              // CPF do psicólogo que vai realizar ou já realizou a consulta
-  data_consultation   DateTime                              // Data e hora da consulta
-  link_meets          String?  @db.VarChar(100)              // Link da reunião no Google Meet
-  create_at           DateTime @default(now())               // Data e hora de criação do registro
+  description       String   @db.VarChar(512)
+  data_consultation DateTime
+  create_at         DateTime @default(now())
+  link_meets        String?  @db.VarChar(100)
+  cpf_paciente      String   @db.VarChar(11)
+  cpf_psychologist  String?  @db.VarChar(100)
+  cpf_user          String   @db.VarChar(11)
+  id                Int      @id @default(autoincrement())
 
-  @@map("consultation") // Mapeia a tabela como "consultas"
+  @@map("consultation")
 }
 
-// Tabela: recomendacoes
 model Report {
-  id                  Int      @id @default(autoincrement()) // Identificador único do usuário
-  name_child           String   @db.VarChar(100)              // Nome da criança atendida na consulta
-  cpf_child           String?   @db.VarChar(11)               // CPF da criança atendida na consulta
-  cpf_user            String   @db.VarChar(11)               // CPF do responsável da crianca que fez a consulta
-  cpf_psychologist    String   @db.VarChar(11)               // CPF do psicólogo que realizou a recomendação
-  nome_psychologist   String   @db.VarChar(100)              // Nome do psicólogo que realizou a recomendação
-  cellphone_number    String   @db.VarChar(15)               // Telefone do psicólogo para contato
-  data                DateTime                              // Data e hora da recomendação
-  report              String   @db.VarChar(3000)             // Recomendações por escrita sobre determinado paciente
+  data              DateTime
+  report            String   @db.VarChar(3000)
+  cellphone_number  String   @db.VarChar(15)
+  cpf_psychologist  String   @db.VarChar(11)
+  cpf_user          String   @db.VarChar(11)
+  nome_psychologist String   @db.VarChar(100)
+  id                Int      @id @default(autoincrement())
+  name_child        String   @db.VarChar(100)
+  cpf_child         String   @db.VarChar(11)
 
-  @@map("report") // Mapeia a tabela como "recomendacoes"
+  @@map("report")
 }
 
-// Tabela: crianças
 model Children {
-  id                  Int      @id @default(autoincrement()) // Identificador único da criança
-  cpf_crianca         String   @db.VarChar(11)              // CPF da criança
-  cpf_responsavel     String   @db.VarChar(11)              // CPF do responsável
-  telefone_responsavel String  @db.VarChar(11)              // Telefone do responsável
-  nome_crianca        String   @db.VarChar(100)             // Nome da criança
+  id                   Int    @id @default(autoincrement())
+  cpf_crianca          String @db.VarChar(11)
+  cpf_responsavel      String @db.VarChar(11)
+  telefone_responsavel String @db.VarChar(11)
+  nome_crianca         String @db.VarChar(100)
 
-  @@map("children") // Mapeia a tabela como "criancas"
+  @@map("children")
 }
 
 enum Status {
