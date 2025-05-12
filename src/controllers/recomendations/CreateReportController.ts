@@ -6,6 +6,7 @@ export class CreateReportController {
     const {
       name_child,
       cpf_user,
+      cpf_child,
       cpf_psychologist,
       nome_psychologist,
       cellphone_number,
@@ -18,6 +19,7 @@ export class CreateReportController {
       const newReport = await createReportService.execute({
         name_child,
         cpf_user,
+        cpf_child,
         cpf_psychologist,
         nome_psychologist,
         cellphone_number,

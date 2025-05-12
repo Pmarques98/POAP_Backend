@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 interface ReportRequest {
   name_child: string;
   cpf_user: string;
+  cpf_child: string;
   cpf_psychologist: string;
   nome_psychologist: string;
   cellphone_number: string;
@@ -15,6 +16,7 @@ export class CreateReportService {
   async execute({
     name_child,
     cpf_user,
+    cpf_child,
     cpf_psychologist,
     nome_psychologist,
     cellphone_number,
@@ -23,6 +25,7 @@ export class CreateReportService {
     if (
       !name_child ||
       !cpf_user ||
+      !cpf_child ||
       !cpf_psychologist ||
       !nome_psychologist ||
       !cellphone_number ||
@@ -32,7 +35,7 @@ export class CreateReportService {
     }
 
     // Verifica se os CPFs possuem 11 dígitos
-    if (cpf_user.length !== 11 || cpf_psychologist.length !== 11) {
+    if (cpf_user.length !== 11 || cpf_psychologist.length !== 11 || cpf_child.length !== 11) {
       throw new Error("CPF precisa ter 11 dígitos");
     }
 
@@ -48,6 +51,7 @@ export class CreateReportService {
       data: {
         name_child,
         cpf_user,
+        cpf_child,
         cpf_psychologist,
         nome_psychologist,
         cellphone_number,
