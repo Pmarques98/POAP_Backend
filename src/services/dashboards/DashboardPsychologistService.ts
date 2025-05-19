@@ -16,8 +16,31 @@ class DashboardPsychologistService {
             },
         });
 
+        // 1. Buscar todas as consultas do psicólogo
+        const consultations = await prismaClient.consultation.findMany({
+            where: {
+                cpf_psychologist: cpf_psychologist,
+            },
+            select: {
+                cpf_paciente: true,
+            },
+        });
 
-        console.log("Data atual ajustada:", currentDate);
+        // 2. Extrair e remover duplicatas dos CPFs dos pacientes
+        const cpfPacientes = [
+            ...new Set(consultations.map((c) => c.cpf_paciente).filter(Boolean))
+        ];
+
+        // 3. Buscar as crianças usando os CPFs dos pacientes
+        const children = await prismaClient.children.findMany({
+            where: {
+                cpf_child: {
+                    in: cpfPacientes,
+                },
+            },
+        });
+
+        // ...código existente para upcomingConsultation...
 
         const upcomingConsultation = await prismaClient.consultation.findMany({
             where: {
@@ -26,19 +49,14 @@ class DashboardPsychologistService {
         }).then((consultations) => {
             for (const consultation of consultations) {
                 const consultationDate = new Date(consultation.data_consultation);
-                console.log("consultationDate:", consultation.data_consultation);
                 const timeDifference = (consultationDate.getTime() - currentDate.getTime()) / (1000 * 60); // Difference in minutes
-                console.log("timeDifference:", timeDifference);
-        
                 if (timeDifference > 0 && timeDifference <= 20) {
-                    console.log("Upcoming consultation found:", consultation);
                     return {
                         isUpcoming: true,
                         link_meets: consultation.link_meets || null,
                     };
                 }
             }
-            console.log("No upcoming consultation found.");
             return {
                 isUpcoming: false,
                 link_meets: null,
@@ -48,6 +66,7 @@ class DashboardPsychologistService {
         return {
             unassignedConsultations,
             upcomingConsultation,
+            children,
         };
     }
 }

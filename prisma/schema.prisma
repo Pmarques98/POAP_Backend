@@ -60,17 +60,50 @@ model Report {
   @@map("report")
 }
 
+model ReportPyschologist {
+  id                Int      @id @default(autoincrement())
+  data              DateTime
+  report            String   @db.VarChar(3000)
+  cpf_psychologist  String   @db.VarChar(11)
+  name_child        String   @db.VarChar(100)
+  cpf_child         String   @db.VarChar(11)
+
+  @@map("reportPyschologist")
+}
+
 model Children {
   id                   Int    @id @default(autoincrement())
-  cpf_crianca          String @db.VarChar(11)
-  cpf_responsavel      String @db.VarChar(11)
-  telefone_responsavel String @db.VarChar(11)
-  nome_crianca         String @db.VarChar(100)
+  cpf_user          String @db.VarChar(11)
+  cpf_child          String @db.VarChar(11)
+  cellphone_user     String @db.VarChar(11)
+  name_child         String @db.VarChar(100)
+  status               ChildStatus?
+
 
   @@map("children")
+}
+
+model Notification {
+  id                Int      @id @default(autoincrement())
+  data              DateTime
+  report            String   @db.VarChar(3000)
+  cpf_psychologist  String   @db.VarChar(11)
+  cpf_user          String   @db.VarChar(11)
+  name_child        String   @db.VarChar(100)
+  cpf_child         String   @db.VarChar(11)
+  viewed       Boolean  @default(false)
+
+  @@map("notification")
 }
 
 enum Status {
   disponivel
   ocupado
+}
+
+enum ChildStatus {
+  leve        // Sintomas leves, sem risco imediato, acompanhamento básico
+  moderado    // Sintomas moderados, tristeza frequente, baixa autoestima, sem ideação suicida ativa
+  grave       // Sintomas graves, isolamento, perda de interesse, depressão
+  critico     // Risco iminente: ideação suicida ativa, plano ou tentativa, necessidade de intervenção constante
 }

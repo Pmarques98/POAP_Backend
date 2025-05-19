@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ChildStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -10,6 +10,7 @@ interface ReportRequest {
   nome_psychologist: string;
   cellphone_number: string;
   report: string;
+  status: ChildStatus;
 }
 
 export class CreateReportService {
@@ -21,6 +22,7 @@ export class CreateReportService {
     nome_psychologist,
     cellphone_number,
     report,
+    status,
   }: ReportRequest) {
     if (
       !name_child ||
@@ -29,7 +31,8 @@ export class CreateReportService {
       !cpf_psychologist ||
       !nome_psychologist ||
       !cellphone_number ||
-      !report
+      !report ||
+      !status
     ) {
       throw new Error("Campos Obrigatórios não preenchidos");
     }
@@ -47,6 +50,7 @@ export class CreateReportService {
     const now = new Date();
     now.setHours(now.getHours() - 3);
 
+    // Cria o relatório
     const newReport = await prisma.report.create({
       data: {
         name_child,
@@ -56,8 +60,14 @@ export class CreateReportService {
         nome_psychologist,
         cellphone_number,
         report,
-        data: now, 
+        data: now,
       },
+    });
+
+    // Atualiza o status da criança pelo CPF
+    await prisma.children.updateMany({
+      where: { cpf_child: cpf_child },
+      data: { status: status },
     });
 
     return newReport;

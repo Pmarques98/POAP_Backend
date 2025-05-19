@@ -1,26 +1,26 @@
 import prismaClient from "../../prisma";
 
 interface ChildRequest {
-    cpf_crianca: string;
-    cpf_responsavel: string;
-    telefone_responsavel: string;
-    nome_crianca: string;
+    cpf_child: string;
+    cpf_user: string;
+    cellphone_user: string;
+    name_child: string;
 }
 
 class CreateChildService {
-    async execute({ cpf_crianca, cpf_responsavel, telefone_responsavel, nome_crianca }: ChildRequest) {
+    async execute({ cpf_child, cpf_user, cellphone_user, name_child }: ChildRequest) {
         // Verificar se todos os campos obrigatórios foram enviados
-        if (!cpf_crianca || !cpf_responsavel || !telefone_responsavel || !nome_crianca) {
+        if (!cpf_child || !cpf_user || !cellphone_user || !name_child) {
             throw new Error("Todos os campos são obrigatórios.");
         }
 
         // Verificar se já existe uma criança cadastrada com o mesmo CPF
         const existingChild = await prismaClient.children.findFirst({
-            where: { cpf_crianca },
+            where: { cpf_child },
         });
 
         // Verificar se o CPF possui exatamente 11 dígitos
-        if (cpf_crianca.length !== 11) {
+        if (cpf_child.length !== 11) {
             throw new Error("CPF deve conter exatamente 11 dígitos");
         }
 
@@ -31,10 +31,10 @@ class CreateChildService {
         // Criar o registro da criança no banco de dados
         const child = await prismaClient.children.create({
             data: {
-                cpf_crianca,
-                cpf_responsavel,
-                telefone_responsavel,
-                nome_crianca,
+                cpf_child,
+                cpf_user,
+                cellphone_user,
+                name_child,
             },
         });
 

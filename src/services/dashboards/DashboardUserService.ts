@@ -11,7 +11,24 @@ class DashboardUserService {
 
         // Consultar todas as crianças relacionadas ao CPF do responsável
         const children = await prismaClient.children.findMany({
-            where: { cpf_responsavel: cpf_user },
+            where: { cpf_user: cpf_user },
+        });
+
+        const childrenWithStatus = children.map(child => ({
+            id: child.id,
+            cpf_crianca: child.cpf_child,
+            nome_crianca: child.name_child,
+            telefone_responsavel: child.cellphone_user,
+            cpf_responsavel: child.cpf_user,
+            status: child.status,
+        }));
+
+        // Consultar todas as notificações relacionadas ao CPF do usuário
+        const notificationsAvailable = await prismaClient.notification.findMany({
+            where: { 
+                cpf_user: cpf_user,
+                viewed: false 
+             },
         });
 
 
@@ -22,7 +39,7 @@ class DashboardUserService {
             where: {
                 cpf_user: cpf_user,
                 cpf_psychologist: {
-                    not: null, // Garante que o cpf_psychologist está preenchido
+                    not: null,
                 },
             },
         }).then((consultations) => {
@@ -66,8 +83,9 @@ class DashboardUserService {
 
         return {
             consultations,
-            children,
+            children: childrenWithStatus,
             upcomingConsultation,
+            notificationsAvailable,
         };
     }
 }

@@ -11,6 +11,7 @@ export class CreateReportController {
       nome_psychologist,
       cellphone_number,
       report,
+      status
     } = req.body;
 
     const createReportService = new CreateReportService();
@@ -24,6 +25,7 @@ export class CreateReportController {
         nome_psychologist,
         cellphone_number,
         report,
+        status
       });
 
       return res.status(201).json(newReport);

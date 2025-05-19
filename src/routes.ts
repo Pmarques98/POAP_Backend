@@ -11,6 +11,10 @@ import { UpdateMeetsLinkController } from './controllers/consultation/UpdateMeet
 import { CreateReportController } from "./controllers/recomendations/CreateReportController";
 import { CreateConsultationAceptedController } from "./controllers/consultation/CreateConsultationAceptedController";
 import { GetReportsController } from "./controllers/recomendations/GetReportsController";
+import { CreateReportPyschologistController } from "./controllers/recomendations/CreateReportInternalController";
+import { CreateNotificationController } from "./controllers/notifications/CreateNotificationController";
+import { UpdateNotificationViewedController } from "./controllers/notifications/UpdateNotificationViewedController";
+import { GetReportPyschologistByCpfController } from "./controllers/recomendations/GetReportPyschologistByCpfController";
 
 const router = Router();
 
@@ -31,6 +35,10 @@ router.post('/consulta/alterarMeets', new UpdateMeetsLinkController().handle);
 router.post('/reports', new CreateReportController().handle);
 router.post('/consulta/aceitas', new CreateConsultationAceptedController().handle);
 router.post('/reports/aceitos', new GetReportsController().handle);
+router.post('/reports/exclusivo', new CreateReportPyschologistController().handle);
+router.post('/notificacao', new CreateNotificationController().handle);
+router.post('/notificacao/visualizada', new UpdateNotificationViewedController().handle);
+router.post('/reports/psicologo', new GetReportPyschologistByCpfController().handle);
 
 
 
