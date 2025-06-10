@@ -1,5 +1,5 @@
-# SIGS_BR (Backend)
-SIGS_BR (Sistema Integrado de Gestão de Saúde para Baixa Renda) é um projeto de TCC composto por Patrick Marques, Lucas Feng, Vitor Chinaglia
+# POAP (Backend)
+POAP (Plataforma Online de Acompanhamento Psicológico) é um projeto de TCC composto por Patrick Marques de Barros Costa e Lucas Nimirio Maia Feng
 
 ## Pré-requisitos
 
