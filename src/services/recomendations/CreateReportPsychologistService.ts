@@ -13,6 +13,18 @@ class CreateReportPyschologistService {
             throw new Error("Todos os campos são obrigatórios.");
         }
 
+        // Verificar se a criança está cadastrada
+        const childExists = await prismaClient.children.findFirst({
+            where: {
+                cpf_child: cpf_child
+            }
+        });
+
+        if (!childExists) {
+            throw new Error("Criança não cadastrada");
+        }
+
+
         const newReport = await prismaClient.reportPyschologist.create({
             data: {
                 data: new Date(),

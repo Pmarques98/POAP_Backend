@@ -33,7 +33,7 @@ class CreateUserServicePsychologist {
             throw new Error("CPF deve conter exatamente 11 dígitos");
         }
 
-        // Verificar se esse email já está cadastrado na plataforma
+        // Verificar se esse cpf já está cadastrado na plataforma
         const userAlreadyExistInPsychologists = await prismaClient.psychologist.findFirst({
             where: {
                 cpf: cpf
@@ -46,7 +46,13 @@ class CreateUserServicePsychologist {
             }
         });
 
-        if (userAlreadyExistInPsychologists || userAlreadyExistInUser) {
+         const userAlreadyExistInChildren = await prismaClient.children.findFirst({
+            where: {
+                cpf_child: cpf
+            }
+        });
+
+        if (userAlreadyExistInPsychologists || userAlreadyExistInUser || userAlreadyExistInChildren) {
             throw new Error("Usuario já está cadastrado");
         }
 

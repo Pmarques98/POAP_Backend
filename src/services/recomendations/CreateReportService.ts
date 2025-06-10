@@ -42,13 +42,34 @@ export class CreateReportService {
       throw new Error("CPF precisa ter 11 dígitos");
     }
 
+    // Verificar se a criança está cadastrada
+    const childExists = await prisma.children.findFirst({
+            where: {
+                cpf_child: cpf_child
+            }
+        });
+
+        if (!childExists) {
+            throw new Error("Criança não cadastrada");
+        }
+
+    // Verificar se a criança está cadastrada
+    const userExists = await prisma.user.findFirst({
+            where: {
+                cpf: cpf_user
+            }
+        });
+
+        if (!userExists) {
+            throw new Error("Usuário não cadastrado");
+        }
+
     // Verifica se o número de celular possui 11 dígitos
     if (cellphone_number.length !== 11) {
       throw new Error("Número de celular precisa ter 11 dígitos");
     }
 
     const now = new Date();
-    now.setHours(now.getHours() - 3);
 
     // Cria o relatório
     const newReport = await prisma.report.create({

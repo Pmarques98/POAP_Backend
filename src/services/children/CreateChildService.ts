@@ -28,6 +28,17 @@ class CreateChildService {
             throw new Error("Já existe uma criança cadastrada com este CPF.");
         }
 
+        // Verificar se o usuario responsável está cadastrado
+        const userExists = await prismaClient.user.findFirst({
+            where: {
+                cpf: cpf_user
+            }
+        });
+
+        if (!userExists) {
+            throw new Error("Usuário não cadastrado");
+        }
+
         // Criar o registro da criança no banco de dados
         const child = await prismaClient.children.create({
             data: {

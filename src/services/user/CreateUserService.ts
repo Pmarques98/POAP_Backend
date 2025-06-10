@@ -38,7 +38,13 @@ class CreateUserService {
             }
         });
 
-        if (userAlreadyExistInPsychologists || userAlreadyExistInUser) {
+        const userAlreadyExistInChildren = await prismaClient.children.findFirst({
+            where: {
+                cpf_child: cpf
+            }
+        });
+
+        if (userAlreadyExistInPsychologists || userAlreadyExistInUser || userAlreadyExistInChildren) {
             throw new Error("Usuario já está cadastrado");
         }
 

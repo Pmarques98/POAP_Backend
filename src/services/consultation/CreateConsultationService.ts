@@ -14,6 +14,17 @@ class CreateConsultationService {
             throw new Error("Todos os campos são obrigatórios");
         }
 
+        // Verificar se a criança está cadastrada
+        const childExists = await prismaClient.children.findFirst({
+            where: {
+                cpf_child: cpf_paciente
+            }
+        });
+
+        if (!childExists) {
+            throw new Error("Criança não cadastrada, favor cadastrar");
+        }
+
         // Verificar se a data da consulta está com menos de 2 horas de antecedência
         const consultationDate = new Date(data_consultation);
         let currentDate = new Date();

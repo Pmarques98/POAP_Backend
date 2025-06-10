@@ -9,10 +9,13 @@ class DashboardPsychologistService {
         const currentDate = new Date();
         currentDate.setHours(currentDate.getHours() - 3); // Ajustar para o fuso horário correto
 
-        // Consultas que não têm o campo "cpf_psychologist" preenchido
+         // Consultas que não têm o campo "cpf_psychologist" preenchido e data futura
         const unassignedConsultations = await prismaClient.consultation.findMany({
             where: {
                 cpf_psychologist: null,
+                data_consultation: {
+                    gte: currentDate,
+                },
             },
         });
 
